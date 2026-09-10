@@ -1,6 +1,7 @@
 # ms-cadastro-funcionario
 
 Microserviço de cadastro de funcionários da TechNovaMBA Solutions, construído em Python com FastAPI, DDD modular, MongoDB e Docker.
+Projeto totalmente criado com GitHub Copilot como laboratório de estudos.
 
 ## Requisitos
 
