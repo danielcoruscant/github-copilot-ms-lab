@@ -4,6 +4,13 @@ from fastapi.responses import JSONResponse
 router = APIRouter(tags=["health"])
 
 
+def _not_ready(detail: str) -> JSONResponse:
+    return JSONResponse(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        content={"status": "not_ready", "detail": detail},
+    )
+
+
 @router.get("/health", summary="Verifica se a aplicacao esta ativa")
 def health_check() -> dict[str, str]:
     return {"status": "ok"}
@@ -13,15 +20,9 @@ def health_check() -> dict[str, str]:
 async def readiness_check(request: Request) -> dict[str, str] | JSONResponse:
     provider = getattr(request.app.state, "mongo_provider", None)
     if provider is None:
-        return JSONResponse(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            content={"status": "not_ready", "detail": "MongoDB is not configured"},
-        )
+        return _not_ready("MongoDB is not configured")
     try:
         await provider.ping()
     except Exception:
-        return JSONResponse(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            content={"status": "not_ready", "detail": "MongoDB is unavailable"},
-        )
+        return _not_ready("MongoDB is unavailable")
     return {"status": "ready"}

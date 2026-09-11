@@ -30,6 +30,8 @@ class IdempotencyReservation:
 class IdempotencyKeyStore(Protocol):
     async def reserve(self, key: str, fingerprint: str) -> IdempotencyReservation:
         """Reserva a chave atomicamente ou retorna seu estado atual."""
+        ...
 
     async def complete(self, key: str, fingerprint: str, funcionario: Funcionario) -> None:
         """Marca a chave como concluida e armazena a resposta."""
+        ...
